@@ -44,6 +44,42 @@ activities = {
         "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
         "max_participants": 30,
         "participants": ["john@mergington.edu", "olivia@mergington.edu"]
+    },
+    "Basketball Team": {
+        "description": "Competitive basketball training and inter-school tournaments",
+        "schedule": "Tuesdays and Thursdays, 4:00 PM - 6:00 PM",
+        "max_participants": 15,
+        "participants": ["alex@mergington.edu", "sarah@mergington.edu"]
+    },
+    "Swimming Club": {
+        "description": "Swimming techniques, fitness, and competitive swimming events",
+        "schedule": "Mondays and Wednesdays, 6:00 AM - 7:30 AM",
+        "max_participants": 25,
+        "participants": ["jacob@mergington.edu", "mia@mergington.edu", "ethan@mergington.edu"]
+    },
+    "Art Club": {
+        "description": "Explore various art mediums including painting, drawing, and sculpture",
+        "schedule": "Fridays, 2:00 PM - 4:00 PM",
+        "max_participants": 18,
+        "participants": ["isabella@mergington.edu", "james@mergington.edu"]
+    },
+    "Drama Society": {
+        "description": "Theater productions, acting workshops, and performance arts",
+        "schedule": "Tuesdays and Thursdays, 6:00 PM - 8:00 PM",
+        "max_participants": 22,
+        "participants": ["ava@mergington.edu", "william@mergington.edu", "charlotte@mergington.edu"]
+    },
+    "Science Olympiad": {
+        "description": "Competitive science events covering biology, chemistry, physics, and engineering",
+        "schedule": "Saturdays, 9:00 AM - 12:00 PM",
+        "max_participants": 16,
+        "participants": ["benjamin@mergington.edu", "amelia@mergington.edu"]
+    },
+    "Model UN": {
+        "description": "Simulate United Nations proceedings and debate global issues",
+        "schedule": "Fridays, 4:00 PM - 6:00 PM",
+        "max_participants": 20,
+        "participants": ["lucas@mergington.edu", "harper@mergington.edu", "mason@mergington.edu"]
     }
 }
 
@@ -68,6 +104,18 @@ def signup_for_activity(activity_name: str, email: str):
     # Get the specific activity
     activity = activities[activity_name]
 
+    # Check if student is already registered
+    if email in activity["participants"]:
+        raise HTTPException(status_code=400, detail="Student is already registered for this activity")
+
+    # Check if activity is at capacity
+    if len(activity["participants"]) >= activity["max_participants"]:
+        raise HTTPException(status_code=400, detail="Activity is at maximum capacity")
+
+    # Validate email format (basic check for @mergington.edu)
+    if not email.endswith("@mergington.edu"):
+        raise HTTPException(status_code=400, detail="Only Mergington High School students can register")
+
     # Add student
     activity["participants"].append(email)
-    return {"message": f"Signed up {email} for {activity_name}"}
+    return {"message": f"Successfully signed up {email} for {activity_name}"}
